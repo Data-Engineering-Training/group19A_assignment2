@@ -16,7 +16,7 @@ services:
 
   rockmongo:
     container_name: rockmongo
-    image: 'realpage/rockmongo:latest'
+    image: 'webts/rockmongo:latest'
     environment:
       - MONGO_SERVERS=mongodb:27017
     ports:
@@ -55,16 +55,17 @@ services:
     networks:
       - app-tier
 
-  mysql-workbench:
+  phpmyadmin:
     container_name: mysql_workbench
-    image: 'mysql/mysql-workbench:latest'
+    image: 'phpmyadmin:latest'
+    restart: always
     depends_on:
       - mysql 
     environment:
       - MYSQL_HOST=mysql 
       - MYSQL_ROOT_PASSWORD=root
     ports:
-      - '3307:3306'
+      - '8080:80'
     networks:
       - app-tier
 
