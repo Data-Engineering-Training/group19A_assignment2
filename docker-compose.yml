@@ -1,0 +1,52 @@
+version: '3.5'
+
+services:
+  mongodb:
+    container_name: mongo_server
+    image: 'bitnami/mongodb:latest'
+    environment:
+      - MONGODB_USERNAME=admin
+      - MONGODB_PASSWORD=admin123 
+      - MONGODB_DATABASE=northwind_db
+      # - MONGODB_CONNECTION_STRING=mongodb://my_user:my_password@localhost:27017/
+    volumes:
+      - mongodb_data:/bitnami/mongodb
+      - /path/to/mongodb-persistence:/bitnami/mongodb
+    ports:
+      - '27020:27017'
+    networks:
+      - app-tier
+
+  mysql:
+    container_name: mysql_server
+    image: 'mysql:latest' 
+    environment:
+      - MYSQL_ROOT_PASSWORD=root
+      - MYSQL_DATABASE=my_database
+    volumes:
+      - mysql_data:/var/lib/mysql 
+    ports:
+      - '3306:3306'
+    networks:
+      - app-tier
+
+  mysql-workbench:
+    container_name: mysql_workbench
+    image: 'mysql/mysql-workbench:latest'
+    depends_on:
+      - mysql 
+    environment:
+      - MYSQL_HOST=mysql 
+      - MYSQL_ROOT_PASSWORD=root
+    ports:
+      - '3307:3306'
+    networks:
+      - app-tier
+
+networks:
+  app-tier:
+    driver: bridge
+
+volumes:
+  mongodb_data:
+  mysql_data:
