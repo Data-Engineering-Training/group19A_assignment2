@@ -1,6 +1,31 @@
 version: '3.5'
 
 services:
+  mongodbmanager:
+    container_name: mongo_server
+    image: 'bitnami/mongodb:latest'
+    environment:
+      - MONGODB_ROOT_PASSWORD=admin123
+      - MONGODB_USERNAME=admin
+      - MONGODB_PASSWORD=admin123
+      - MONGODB_DATABASE=northwind_db
+    ports:
+      - '27017:27017'
+    networks:
+      - app-tier
+
+  rockmongo:
+    container_name: rockmongo
+    image: 'realpage/rockmongo:latest'
+    environment:
+      - MONGO_SERVERS=mongodb:27017
+    ports:
+      - '8080:80'
+    depends_on:
+      - mongodb
+    networks:
+      - app-tier
+
   mongodb:
     container_name: mongo_server
     image: 'bitnami/mongodb:latest'
@@ -22,7 +47,7 @@ services:
     image: 'mysql:latest' 
     environment:
       - MYSQL_ROOT_PASSWORD=root
-      - MYSQL_DATABASE=my_database
+      - MYSQL_DATABASE=northwind_db
     volumes:
       - mysql_data:/var/lib/mysql 
     ports:
