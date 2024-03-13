@@ -2,7 +2,8 @@
 
 Contributors - GROUP 19A
 -------------------------
-1. Daniel Dake
+1. Daniel Dake (dake@trestleacademyghana.org)
+2. Kofi Adom (adom@trestleacademyghana.org)
 
 Requirements:
 -------------
