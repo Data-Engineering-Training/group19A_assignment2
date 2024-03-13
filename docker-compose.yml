@@ -8,11 +8,8 @@ services:
       - MONGO_SERVERS=mongodb:27017
     ports:
       - '8080:80'
-    depends_on:
-      - mongodb
     networks:
       - app-tier
-    restart: unless-stopped
 
   mongodb:
     container_name: mongodb
@@ -24,7 +21,7 @@ services:
     volumes:
       - mongodb_data:/data/db
     ports:
-      - '27017:27017'
+      - '27020:27017'
     networks:
       - app-tier
     restart: unless-stopped
@@ -45,7 +42,6 @@ services:
 
   phpmyadmin:
     image: phpmyadmin/phpmyadmin
-    restart: always
     environment:
       - PMA_ARBITRARY=1
       - PMA_HOST=mysql
