@@ -1,33 +1,33 @@
 version: '3.5'
 
 services:
-  # rockmongo:
-  #   container_name: rockmongo
-  #   image: 'webts/rockmongo:latest'
-  #   environment:
-  #     - MONGO_SERVERS=mongodb:27017
-  #   ports:
-  #     - '8080:80'
-  #   depends_on:
-  #     - mongodbmanager
-  #   networks:
-  #     - app-tier
-
-  mongodb:
-    container_name: mongodb_second
-    image: 'mongodb:latest'
+  rockmongo:
+    container_name: rockmongo
+    image: 'webts/rockmongo:latest'
     environment:
-      - MONGODB_USERNAME=admin
-      - MONGODB_PASSWORD=admin123
-      - MONGODB_DATABASE=northwind_db
-    volumes:
-      - mongodb_data:/mongodb
+      - MONGO_SERVERS=mongodb:27017
     ports:
-      - '27020:27017'
+      - '8080:80'
     depends_on:
       - mongodb
     networks:
       - app-tier
+    restart: unless-stopped
+
+  mongodb:
+    container_name: mongodb
+    image: 'mongo:latest'
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=admin
+      - MONGO_INITDB_ROOT_PASSWORD=admin123
+      - MONGO_INITDB_DATABASE=northwind_db
+    volumes:
+      - mongodb_data:/data/db
+    ports:
+      - '27017:27017'
+    networks:
+      - app-tier
+    restart: unless-stopped
 
   mysql:
     container_name: mysql_server
@@ -41,15 +41,17 @@ services:
       - '3306:3306'
     networks:
       - app-tier
+    restart: unless-stopped
 
   phpmyadmin:
-    image: phpmyadmin
+    image: phpmyadmin/phpmyadmin
     restart: always
     environment:
-      - MYSQL_HOST=mysql 
+      - PMA_ARBITRARY=1
+      - PMA_HOST=mysql
       - MYSQL_ROOT_PASSWORD=root
     ports:
-      - '8081:80'
+      - "${PHPMYADMIN_PORT:-8081}:80"
 
 networks:
   app-tier:
